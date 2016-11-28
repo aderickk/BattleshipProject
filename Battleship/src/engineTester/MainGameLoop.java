@@ -3,10 +3,13 @@ package engineTester;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
+import models.RawModel;
+import models.TexturedModel;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
-import renderEngine.RawModel;
 import renderEngine.Renderer;
+import shaders.StaticShader;
+import textures.ModelTexture;
 
 public class MainGameLoop
 {
@@ -19,28 +22,37 @@ public class MainGameLoop
 		// Create important stuff
 		Loader loader = new Loader();
 		Renderer renderer = new Renderer();
+		StaticShader shader = new StaticShader();
 		
 		// Hardcoded data BEGIN
 		// |
 		float[] vertices = {
-				0.2f, 0.1f, 0f,
-				-0.2f, 0.1f, 0f,
-				0.2f, -0.1f, 0f,
-				0.2f, 0.2f, 0f,
-				-0.2f, 0.2f, 0f,
-				1f, 1f, 0f
+				0.5f, 0.5f, 0f,
+				-0.5f, 0.5f, 0f,
+				-0.5f, -0.5f, 0f,
+				0.5f, -0.5f, 0f
 		};
 		// |
 		// |
 		int[] indices = {
 				0,1,2,
-				3,4,5
+				0,2,3
+		};
+		// |
+		// |
+		float[] textureCoords = {
+				1, 0,
+				0, 0,
+				0, 1,
+				1, 1
 		};
 		// |
 		// Hardcoded data END
 		
-		RawModel model = loader.loadToVAO(vertices, indices);
-		RawModel model2 = loader.loadToVAO(vertices, indices);
+		// Create a RawModel, load a Texture and create a TexturedModel
+		RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
+		ModelTexture texture = new ModelTexture(loader.loadTexture("logo"));
+		TexturedModel texturedModel = new TexturedModel(model, texture);
 		
 		while(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !Display.isCloseRequested())
 		{
@@ -52,14 +64,22 @@ public class MainGameLoop
 			// (clear the color of the last frame)
 			renderer.prepare();
 			
+			// Start the Shader
+			shader.start();
+			
 			// Render the model
-			renderer.render(model);
-			renderer.render(model2);
+			renderer.render(texturedModel);
+			
+			// Stop the Shader
+			shader.stop();
 			
 			// Update the Display
 			DisplayManager.updateDisplay();
 			
 		}
+		
+		// CleanUp the Shader
+		shader.cleanUp();
 		
 		// CleanUp all the VAOs and VBOs
 		loader.cleanUp();

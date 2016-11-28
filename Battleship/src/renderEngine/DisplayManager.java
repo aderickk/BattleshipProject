@@ -10,12 +10,13 @@ import org.lwjgl.opengl.PixelFormat;
 
 public class DisplayManager
 {
-	
+	// Create variable for max. FPS and title and set default values
 	private static int FPS_CAP = 60;
 	private static String title = "Battleship";
 	
 	public static void createDisplay(int width, int height)
 	{
+		// Call main-Constructor
 		createDisplay(width, height, 60);
 	}
 	
@@ -45,17 +46,22 @@ public class DisplayManager
 	
 	public static void updateDisplay()
 	{
+		// Set maximum FPS
 		Display.sync(FPS_CAP);
+		
+		// Update the Display
 		Display.update();
 	}
 	
 	public static void closeDisplay()
 	{
+		// Destroy the Display (Window)
 		Display.destroy();
 	}
 	
 	public void setTitle(String title)
 	{
+		// Store and set the [title] of the Window
 		DisplayManager.title = title;
 		Display.setTitle(title);
 	}

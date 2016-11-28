@@ -1,0 +1,16 @@
+#version 400 core
+
+// Inputs
+in vec2 passedTextureCoords;
+
+// Outputs
+out vec4 outColor;
+
+// uniforms
+uniform sampler2D textureSampler;
+
+void main(void)
+{
+	// Take the color from the specified coordinate on the texture
+	outColor = texture(textureSampler, passedTextureCoords);
+}
