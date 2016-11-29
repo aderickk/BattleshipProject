@@ -25,7 +25,7 @@ public class Loader
 	private List<Integer> vbos = new ArrayList<Integer>();
 	private List<Integer> textures = new ArrayList<Integer>();
 	
-	public RawModel loadToVAO(float[] positions, float[] textureCoords, int[] indices)
+	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices)
 	{
 		// Create a VAO and add it to the VAOList
 		int vaoID = createVAO();
@@ -37,6 +37,7 @@ public class Loader
 		// Store [positions] in the 0th Slot of the VAO and [textureCoods] in the 1st
 		storeDataInAttributeList(0, 3, positions);
 		storeDataInAttributeList(1, 2, textureCoords);
+		storeDataInAttributeList(2, 3, normals);
 		
 		// Unbind the VAO
 		unbindVAO();
@@ -94,7 +95,7 @@ public class Loader
 		return vaoID;
 	}
 	
-	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data)
+	private void storeDataInAttributeList(int attributeNumber, int size, float[] data)
 	{
 		// Generate a VBO and add it to the VBOList
 		int vboID = GL15.glGenBuffers();
@@ -108,7 +109,7 @@ public class Loader
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		
 		// Put the VBO in an AttributeList of the VAO
-		GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0,0);
+		GL20.glVertexAttribPointer(attributeNumber, size, GL11.GL_FLOAT, false, 0,0);
 		
 		// Unbind the VBO
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);

@@ -2,15 +2,40 @@
 
 // Inputs
 in vec2 passedTextureCoords;
+in vec3 surfaceNormal;
+in vec3 toLightVector;
+in vec3 toCameraVector;
 
 // Outputs
 out vec4 outColor;
 
 // uniforms
 uniform sampler2D textureSampler;
+uniform mat4 transformationMatrix;
+uniform vec3 lightColor;
+uniform float shineDamper;
+uniform float reflectivity;
 
 void main(void)
 {
-	// Take the color from the specified coordinate on the texture
-	outColor = texture(textureSampler, passedTextureCoords);
+	// Normalize Vectors
+	vec3 unitNormal = normalize(surfaceNormal);
+	vec3 unitLightVector = normalize(toLightVector);
+	vec3 unitCameraVector = normalize(toCameraVector);
+	
+	// Calculate the brightness  and diffuse of each pixel
+	float brightness = max(dot(unitNormal, unitLightVector), 0.2);
+	vec3 diffuse = brightness * lightColor;
+	
+	// Calculate the specular light
+	vec3 lightDirection = -unitLightVector;
+	vec3 reflectedVector = reflect(lightDirection, unitNormal);
+	float specularFactor = max(dot(reflectedVector, unitCameraVector), 0.0);
+	float damped = pow(specularFactor, shineDamper);
+	vec3 specular = damped * reflectivity * lightColor;	
+
+	// Take the color from the specified coordinate on the texture and use the diffuse and specular lighting
+	outColor =vec4(diffuse, 1.0) * texture(textureSampler, passedTextureCoords) + vec4(specular, 1.0);
+	
+	
 }
