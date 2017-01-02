@@ -12,7 +12,7 @@ public class Camera
 	private float roll;		// z-Axis
 	
 	// Creating Variables for the Camera's move- and rotation-speed
-	private float moveSpeed = 0.05f;
+	private float moveSpeed = 0.5f;
 	private float rotateSpeed = 0.5f;
 	
 	// Create a Vector for the Camera's orientation
@@ -79,6 +79,17 @@ public class Camera
 		{
 			pitch = (pitch + rotateSpeed) % 360;
 		}
+	}
+	
+	// Set cameraPosition and angle
+	public void setCameraPosition(float x, float y, float z, float pitch, float yaw)
+	{
+		position.x = x;
+		position.y = y;
+		position.z = z;
+		this.pitch = pitch;
+		this.yaw = yaw;
+		updateCameraVector();
 	}
 	
 	// Update the cameraVector

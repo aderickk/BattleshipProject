@@ -1,0 +1,41 @@
+#version 400 core
+
+
+// Inputs
+in vec3 position;
+in vec2 textureCoords;
+in vec3 normal;
+
+// Outputs
+out vec2 passedTextureCoords;
+out vec3 surfaceNormal;
+out vec3 toLightVector;
+out vec3 toCameraVector;
+
+
+// Uniforms
+uniform mat4 transformationMatrix;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform vec3 lightPosition;
+
+void main(void)
+{
+	// Calculate the position in the world
+	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
+
+	// Define the position of the Vertex
+	gl_Position = projectionMatrix * viewMatrix * worldPosition;
+	
+	// Pass the textureCoords to the fragmentShader
+	passedTextureCoords = textureCoords * 40.0;
+	
+	// Calculate the normalVector and the Vector pointing towards the light of the surface depending on its position and orientation
+	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
+	
+	// Calculate the Vector from the Vertex to the Light
+	toLightVector = lightPosition - worldPosition.xyz;
+	
+	// Calculate the Vector from the Vertex to the Camera
+	toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
+}

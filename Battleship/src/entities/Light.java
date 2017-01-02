@@ -15,6 +15,22 @@ public class Light
 		this.color = color;
 	}
 	
+	// Increase the position of the entity
+	public void increasePosition(float x, float y, float z)
+	{
+		position.x += x;
+		position.x += y;
+		position.x += z;
+	}
+	
+	// Decrease the position of the entity
+	public void decreasePosition(float x, float y, float z)
+	{
+		position.x -= x;
+		position.x -= y;
+		position.x -= z;
+	}
+	
 	/*
 	 * Simple Getters- and Setter-Section 
 	 */
